@@ -1,0 +1,56 @@
+﻿@model UserChatViewModel
+@{
+    // var loggedInUserEmail = TempData["LoggedInUser"] as string;
+    // string names = loggedInUserEmail;
+    var sessionData = ViewContext.HttpContext.Session.GetString("Key");
+}
+
+<p>Welcome, @sessionData !</p>
+
+<input type="hidden" id="names" value="@sessionData" />
+<form id="chatForm">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="SelectedUsers">Select Users:</label>
+                <select id="userDropdown" class="form-control" multiple="multiple">
+                    <!-- Options populated from the controller -->
+                    @foreach (var user in Model.AvailableUsers)
+                    {
+                        <option value="@user.Email">@user.Email</option>
+                    }
+                </select>
+                <span class="text-danger" id="validationMessage"></span>
+            </div>
+        </div>
+        <div class="col-4 mt-5">
+            <div class="form-group">
+                <input type="button" id="join" value="send request" />
+                <input type="text" id="messageInput" placeholder="send message" />
+                <input type="button" id="sendButton" value="send message" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+
+</form>
+
+
+
+<!-- Include SignalR scripts -->
+@* <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js.map"></script> *@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.12/signalr.min.js"></script>
+
+<script src="~/js/chat.js"></script>

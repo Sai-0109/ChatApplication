@@ -1,0 +1,14 @@
+﻿@model List<UserModel>
+
+<h2>User List</h2>
+
+@foreach (var user in Model)
+{
+    <div>
+        @user.Email
+        <form asp-action="SendFriendRequest" method="post">
+            <input type="hidden" name="receiverId" value="@user.UserId" />
+            <button type="submit">Send Friend Request</button>
+        </form>
+    </div>
+}

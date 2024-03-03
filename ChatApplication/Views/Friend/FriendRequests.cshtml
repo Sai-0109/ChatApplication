@@ -1,0 +1,15 @@
+﻿@* @model List<FriendRequestModel>
+
+<h2>Friend Requests</h2>
+
+@foreach (var request in Model)
+{
+    
+        @request.SenderId has sent you a friend request.
+        <form asp-action="RespondToFriendRequest" method="post">
+            <input type="hidden" name="requestId" value="@request.Id" />
+            <button type="submit" name="accept" value="true">Accept</button>
+            <button type="submit" name="accept" value="false">Reject</button>
+        </form>
+    
+} *@

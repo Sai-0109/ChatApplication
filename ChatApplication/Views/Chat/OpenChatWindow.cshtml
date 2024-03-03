@@ -1,0 +1,71 @@
+﻿<!-- Views/Chat/OpenChatWindow.cshtml -->
+@model int  // Assuming userId is passed to the view
+
+<div>
+    <h3 id="chatHeader">Chat with User @Model</h3>
+    <div id="chatMessages"></div>
+    <input type="text" id="messageInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.12/signalr.min.js"></script>
+
+<script>
+
+    // Your JavaScript code for sending messages via SignalR
+    // Example: Use SignalR to send and receive messages
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/ChatApplication")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    connection.start().catch(err => console.error(err));
+
+    connection.on("ReceiveMessage", (message) => {
+        // Handle received messages, e.g., append to the chatMessages div
+        document.getElementById("chatMessages").innerHTML += `<p>${message}</p>`;
+    });
+
+    function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value;
+
+        // Get the userId from the URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var userId = parseInt(urlParams.get('userId')); // Convert to integer
+
+        // Example: Send the message to the server using SignalR
+        connection.invoke("SendMessage", userId, message).catch(err => console.error(err));
+
+        // Clear the input field after sending the message
+        messageInput.value = '';
+    }
+
+
+
+    function startChat() {
+        // Submit the form to process the chat
+        document.getElementById("chatForm").submit();
+
+        // For each selected user, open a new window
+        var selectedUsers = document.getElementById("SelectedUsers").selectedOptions;
+        for (var i = 0; i < selectedUsers.length; i++) {
+            var userId = selectedUsers[i].value;
+            openChatWindow(userId);
+        }
+    }
+
+    function openChatWindow(userId) {
+        // Logic to open a new chat window
+        window.open('/Chat/OpenChatWindow/' + userId, '_blank', 'width=600, height=400, resizable=yes');
+    }
+
+</script>
+
+@section scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js.map"></script>
+
+}
+
